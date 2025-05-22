@@ -1,0 +1,32 @@
+import turtle
+import random
+import time
+
+screen = turtle.Screen()
+turtle = turtle.Turtle()
+turtle.speed(0)
+
+screen.bgcolor("black")
+
+screen.tracer()
+turtle.hideturtle()
+
+decay = 0.8
+wait = 1
+
+the_time = time.time()
+
+for i in range (100):
+  time.sleep(wait)
+  wait = max(wait*decay, 0.15)
+  turtle.clear()
+  turtle.penup()
+  turtle.goto(random.randint(-150,150), random.randint(-150,150))
+  turtle.pendown()
+  turtle.color(random.randint(0,255), random.randint(0,255), random.randint(0,255))
+  turtle.begin_fill()
+  turtle.circle(random.randint(10,100))
+  turtle.end_fill()
+
+length = time.time() - the_time
+print("time taken is {} seconds".format(round(length, 2)))
