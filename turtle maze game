@@ -1,0 +1,95 @@
+import turtle
+
+maze = [
+"xxxxxxxxxxxxxxxx",
+"x xx     xxxxxxx",
+"x    xxx xxxxxxx",
+"xx xxxxx   xxxxx",
+"xx  xxxxxx  xxxx",
+"xxx xxxx xx    x",
+"xxx      xxxxxFx",
+"xxxxxxxxxxxxxxxx"]
+
+screen = turtle.Screen()
+
+
+def touch_wall(x,y):
+  global turtles
+  for i in turtles:
+    if round(i.xcor()) == round(x) and round(i.ycor()) == round(y):
+      return True
+  return False
+
+def go(turtle,x,y):
+  turtle.penup()
+  turtle.goto(x,y)
+  turtle.pendown()
+
+
+turtles = []
+
+spacing = 22
+x_change = 150
+y_change = 50
+
+for i in range(len(maze)):
+  for j in range(len(maze[i])):
+    if maze[i][j] == "x":
+      new_turtle = turtle.Turtle()
+      new_turtle.speed(0)
+      new_turtle.shape("square")
+      go(new_turtle, j*spacing-x_change, i*-spacing+y_change)
+      turtles.append(new_turtle)
+    elif maze[i][j] == "F":
+      finish = turtle.Turtle()
+      finish.speed(0)
+      finish.shape("circle")
+      finish.color("green")
+      go(finish, j*spacing-x_change, i*-spacing+y_change)
+      
+start_x = spacing-x_change
+start_y = -spacing+y_change
+
+
+
+player = turtle.Turtle()
+player.shape("turtle")
+player.color("blue")
+go(player, start_x, start_y)
+
+player.penup()
+
+def up():
+  player.setheading(90)
+  if not touch_wall(player.xcor(), player.ycor()+spacing):
+    player.forward(spacing)
+  
+def left():
+  player.setheading(180)
+  if not touch_wall(player.xcor()-spacing, player.ycor()):
+    player.forward(spacing)
+
+def right():
+  player.setheading(0)
+  if not touch_wall(player.xcor()+spacing, player.ycor()):
+    player.forward(spacing)
+  
+def down():
+  player.setheading(270)
+  if not touch_wall(player.xcor(), player.ycor()-spacing):
+    player.forward(spacing)
+
+
+screen.listen()
+
+screen.onkey(up,"Up")
+screen.onkey(down,"Down")
+screen.onkey(left,"Left")
+screen.onkey(right,"Right")
+      
+while True:
+  if round(player.xcor()) == round(finish.xcor()) and round(player.ycor()) == round(finish.ycor()):
+    print("you have won!")
+    break
+    
+    
