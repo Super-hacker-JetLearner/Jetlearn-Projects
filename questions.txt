@@ -1,0 +1,11 @@
+What is the longest river in the world?,The Nile,Amazon River,Missispi River,Atlantic Ocean,1
+What country has the most people?,USA,China,India,Antarctica,3
+What is 78+65,153,133,143,137,3
+What is the biggest country in the world?,USA,Antarctica,Canada,Russia,4
+What is the smallest country in the world?,San Marino,Nauru,The Netherlands,Vatican City,4
+Who won the superbowl 2025?,Kansas City Chiefs,Buffalo Bills,Detroit Lions,Philadelphia Eagles,4
+When was python first released?,1987,2003,1991,1995,3
+Who is known as the father of mathematics?,Pythagoreas,Newton,Archimedes,Einstein,3
+What is on the surface of neutron stars?,Nothing,Iron,Vacuum,Steel,2
+What is the temperature inside a star?,can be > 100 mil,is always < 100 mil,is 40-80 mil,is exactly 100 mil,1
+What is the speed of light?,1.07925285 × 10^9, 2.07925285 × 10^9, 3.07925285 × 10^9, 2.07925285 × 10^10,1
