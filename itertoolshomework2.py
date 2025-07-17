@@ -22,7 +22,7 @@ spaceship.center = WIDTH/2, HEIGHT/2
 
 def move_block():
     animate(block,
-            tween='start_elastic',
+            "bounce_start",
             duration=2,
             pos=next(block_positions))
 
