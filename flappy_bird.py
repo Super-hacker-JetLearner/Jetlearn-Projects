@@ -20,6 +20,9 @@ ground = pygame.transform.scale(ground, (WIDTH, 100))
 ground2 = pygame.image.load('/Users/s932172@aics.espritscholen.nl/Desktop/game development/images/flappy bird ground.png')
 ground2 = pygame.transform.scale(ground, (WIDTH, 100))
 
+pipe_image = pygame.image.load('/Users/s932172@aics.espritscholen.nl/Desktop/game development/images/flappy bird pipe.png')
+pipe_image = pygame.transform.scale(pipe_image, (50,HEIGHT))
+
 rect1 = ground.get_rect()
 rect1.topleft = (0,700)
 
@@ -28,8 +31,9 @@ rect2.topleft = (800,700)
 
 ground_speed = 5
 gravity = 0.2
-up_speed = 10
-
+jump_speed = 1.5
+maximum_up_speed = 7
+# last_clicked = False
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x,y):
@@ -49,46 +53,92 @@ class Bird(pygame.sprite.Sprite):
             self.rects.append(flappy_rect)
             
         self.current_image = 0
+        self.image = self.images[self.current_image]
+        self.rect = self.rects[self.current_image]
     
-    def move(self):
+    def update(self):
         self.yv += gravity
         self.position[1] += self.yv
+        for rect in self.rects:
+            rect.center = self.position
         
-    def draw(self):
-        window.blit(self.images[self.current_image], self.position)
-    def animate(self):
-        if time.time() - self.the_time > flappy_bird.image_change_speed:
+        if time.time() - self.the_time > self.image_change_speed:
             self.the_time = time.time()
-            flappy_bird.current_image += 1
-            if flappy_bird.current_image == 3:
-                flappy_bird.current_image = 0
-                
-                
-class Pipe():
-    def __init__(self, height)
+            self.current_image += 1
+            if self.current_image == 3:
+                self.current_image = 0
+            self.image = self.images[self.current_image]
+            self.rect = self.rects[self.current_image]
+            
+            
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[K_SPACE]:
+            self.yv -= jump_speed
+        if self.yv < -maximum_up_speed:
+            self.yv = -maximum_up_speed
+
+
+        
+
+
+class Pipe(pygame.sprite.Sprite):
+    def __init__(self, height_position, gap_size=70, top_bottom:int=1, move_speed=10):
+        this_pipe = pipe_image
+        self.move_speed = move_speed
+        if top_bottom == 1:
+            this_pipe = pygame.transform.flip(this_pipe, False, True)
+            self.image = this_pipe
+            self.rect = this_pipe.get_rect()
+            self.rect.bottomleft = (WIDTH, height_position - gap_size/2)
+        else:
+            self.image = this_pipe
+            self.rect = this_pipe.get_rect()
+            self.rect.topleft = (WIDTH, height_position + gap_size/2)
+        
+        
+    def update(self):
+        self.rect.x -= self.move_speed
+        for i in self.rects:
+            i.x -= self.move_speed
+        if self.rects[0].right < 0:
+            self.kill()
+        
+
+pipe_group = pygame.sprite.Group()
+
+def make_pipe():
+    height_position = random.randint(0,HEIGHT)
+    pipe_group.add(Pipe(height_position, top_bottom=1))
+    pipe_group.add(Pipe(height_position, top_bottom=0))
 
 
 
+bird_group = pygame.sprite.Group()
 
-flappy_bird = Bird(100,400)
+bird_group.add(Bird(100,400))
+
 
 game_start = False
 
 clock = pygame.time.Clock()
+
+Pipe(500)
+
 while True:
     dt = clock.tick(60)
     window.fill((0,0,0))
+    # last_clicked = False
+    
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
         
         if event.type == MOUSEBUTTONDOWN:
             game_start = True
-            
-    pressed_keys = pygame.key.get_pressed()
-    if pressed_keys[K_SPACE]:
-        flappy_bird.position[1] -= up_speed
-        flappy_bird.yv = 0
+        
+
+   
+   
     window.blit(background, (0,0))
     window.blit(ground, rect1)
     window.blit(ground2,rect2)
@@ -100,11 +150,15 @@ while True:
         if rect2.left <= -800:
             rect2.left = 800
         
-        flappy_bird.move()
         
     
-    flappy_bird.animate()
-    flappy_bird.draw()
+    # bird_group.animate()
+    bird_group.update()
+    bird_group.draw(window)
+    
+    for pipe in pipe_group:
+        pipe.move()
+        pipe.draw()
 
             
     pygame.display.update()
