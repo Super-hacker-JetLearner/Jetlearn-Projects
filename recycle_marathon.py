@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from random import *
+import time
 
 
 
@@ -10,6 +11,8 @@ WIDTH = 1200
 HEIGHT = 800
 screen_size = (WIDTH, HEIGHT)
 window = pygame.display.set_mode(screen_size)
+
+time_limit = 60
 
 
 plastic_bag_image = pygame.image.load('/Users/s932172@aics.espritscholen.nl/Desktop/game development/images/plastic bag2.png')
@@ -29,6 +32,9 @@ wood_box_image = pygame.transform.scale(wood_box_image, (50,70))
 
 recycle_background_image = pygame.image.load('/Users/s932172@aics.espritscholen.nl/Desktop/game development/images/recycle background.png')
 recycle_background_image = pygame.transform.scale(recycle_background_image, screen_size)
+
+font = pygame.font.SysFont('Times New Roman', 100)
+win_lose_font = pygame.font.SysFont('Times New Roman', 150)
 
 class Bin(pygame.sprite.Sprite):
     def __init__(self, position:tuple, image:pygame.surface.Surface=bin_image, speed:int|float=10):
@@ -73,6 +79,7 @@ def make_non_recyclable_garbage():
         position = (randint(0,WIDTH), randint(0,HEIGHT))
         garbage = Garbage(position, image=plastic_bag_image, non_recyclable=True)
         garbage_group.add(garbage)
+        
 
 garbage_image_list = [paper_bag_image, wood_box_image, pencil_image]
 def make_recyclable_garbage():
@@ -91,8 +98,12 @@ bin = Bin((300,300))
 score = 0
 
 
+start_time = time.time()
 
 clock = pygame.time.Clock()
+
+game_state = 'running'
+
 while True:
     clock.tick(60)
     window.blit(recycle_background_image, (0,0))
@@ -100,11 +111,33 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             
-    
-    bin.update()
-    window.blit(bin.image, bin.rect)
-    
-    garbage_group.update()
-    garbage_group.draw(window)
+    if game_state == 'running':
+        bin.update()
+        
+        garbage_group.update()
+        
+        time_left = round(time_limit - (time.time() - start_time))
+        print(time_left)
+        if time_left <= 0:
+            if score >= 50:
+                game_state = 'win'
+            else:
+                game_state = 'lose'
             
+    window.blit(bin.image, bin.rect)
+    garbage_group.draw(window)
+    
+    score_text = font.render(f'{score}', True, (0,0,0))
+    window.blit(score_text, (0,0))
+    
+    time_text = font.render(f'{time_left}', True, (0,0,0))
+    window.blit(time_text, (1100,0))
+
+    if game_state == 'win':
+        win_text = win_lose_font.render('You Won!', True, (0,255,0))
+        window.blit(win_text, (100,400))
+    elif game_state == 'lose':
+        lose_text = win_lose_font.render('You Lost!', True, (255,0,0))
+        window.blit(lose_text, (100,400))
+
     pygame.display.update()
