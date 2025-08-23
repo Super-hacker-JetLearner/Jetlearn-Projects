@@ -29,12 +29,22 @@ big_asteroid = pygame.transform.scale_by(asteroid_image, 1.2)
 medium_asteroid = pygame.transform.scale_by(big_asteroid, 0.6)
 small_asteroid = pygame.transform.scale_by(medium_asteroid, 0.5)
 
+shooting_sound = pygame.mixer.Sound('/Users/s932172@aics.espritscholen.nl/Desktop/game development/sounds/shoot.wav')
+banglarge = pygame.mixer.Sound('/Users/s932172@aics.espritscholen.nl/Desktop/game development/sounds/bangLarge.wav')
+banglarge.set_volume(1.0)
+bangsmall = pygame.mixer.Sound('/Users/s932172@aics.espritscholen.nl/Desktop/game development/sounds/bangSmall.wav')
+
 font = pygame.font.SysFont('Times New Roman', 72)
 
 # half_pi = math.pi/2
-asteroid_appear_rate = (0.1,0.3)
+asteroid_appear_rate = (0.7,1)
 last_asteroid = time.time()
 time_to_asteroid = random.uniform(asteroid_appear_rate[0], asteroid_appear_rate[1])
+
+asteroid_appear_width = WIDTH + 200
+asteroid_appear_zero_x = -200
+asteroid_appear_height = HEIGHT + 200
+asteroid_appear_zero_y = -200
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -83,6 +93,7 @@ class Spaceship(pygame.sprite.Sprite):
         if time.time() - self.last_shoot > self.shooting_speed:
             projectile_group.add(Projectile(self.position, direction=self.direction))
             self.last_shoot = time.time()
+            shooting_sound.play()
 
 
 class Asteroid(pygame.sprite.Sprite):
@@ -109,11 +120,11 @@ class Asteroid(pygame.sprite.Sprite):
             
             xy = random.choice(["x", "y"])
             if xy == "x":
-                position[0] = random.choice([0, WIDTH])
-                position[1] = random.randint(0,HEIGHT)
+                position[0] = random.choice([asteroid_appear_zero_x, asteroid_appear_width])
+                position[1] = random.randint(asteroid_appear_zero_y, asteroid_appear_height)
             else:
-                position[1] = random.choice([0,HEIGHT])
-                position[0] = random.randint(0,WIDTH)
+                position[1] = random.choice([asteroid_appear_zero_y, asteroid_appear_height])
+                position[0] = random.randint(asteroid_appear_zero_x, asteroid_appear_width)
         # self.rect = pygame.rect.Rect(position, self.image.get_size())
         self.rect.center = position
         direction_offset = random.uniform(-0.2, 0.2)
@@ -147,7 +158,7 @@ class Asteroid(pygame.sprite.Sprite):
 spaceship = Spaceship((600,400))
 
 asteroid_group = pygame.sprite.Group()
-asteroid_group.add(Asteroid(0, 2))
+# asteroid_group.add(Asteroid(size=2))
 
 # def check_collided(projectile, asteroid):
 #     global score
@@ -178,9 +189,7 @@ while True:
         i.draw()
         
         
-    # window.blit(big_asteroid, (300,300))
-    # window.blit(medium_asteroid, (500,500))
-    # window.blit(small_asteroid, (700,700))
+
     if time.time() - last_asteroid > time_to_asteroid:
         asteroid_group.add(Asteroid())
         last_asteroid = time.time()
@@ -200,32 +209,37 @@ while True:
                 speed = asteroid.speed
                 asteroid.kill()
                 direction = math.atan2(projectile.position[1]-position[1], projectile.position[0]-position[0])
+                banglarge.play()
                 for i in range (2):
-                    random_direction = random.uniform(-90, 90)
+                    random_direction = random.uniform(-1, 1)
                     total_direction = direction + random_direction
-                    xv = math.cos(direction)*speed
-                    yv = math.sin(direction)*speed
+                    xv = math.cos(total_direction)*speed
+                    yv = math.sin(total_direction)*speed
                     print(position)
                     new_asteroid = Asteroid(size=1, position=position, velocity=(xv,yv))
                     print(new_asteroid.position)
                     asteroid_group.add(new_asteroid)
+                    
                 
             elif asteroid.size == 1:
                 position = asteroid.position
                 speed = asteroid.speed
                 asteroid.kill()
+                bangsmall.play()
                 direction = math.atan2(projectile.position[1]-position[1], projectile.position[0]-position[0])
                 for i in range (2):
-                    random_direction = random.uniform(-90, 90)
+                    random_direction = random.uniform(-1, 1)
                     total_direction = direction + random_direction
-                    xv = math.cos(direction)*speed
-                    yv = math.sin(direction)*speed
+                    xv = math.cos(total_direction)*speed
+                    yv = math.sin(total_direction)*speed
                     print(position)
                     new_asteroid = Asteroid(size=0, position=position, velocity=(xv,yv))
                     print(new_asteroid.position)
                     asteroid_group.add(new_asteroid)
+                    
             else:
                 asteroid.kill()
+                bangsmall.play()
             
             asteroid.rect = asteroid.image.get_rect()
     
