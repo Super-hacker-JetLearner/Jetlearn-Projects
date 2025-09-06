@@ -4,11 +4,14 @@ from random import randint
 window = Tk()
 window.title('Rock Paper Scissors')
 window.geometry('800x500')
+window.focus_force()
 
 # use win_lose_array[computer][person]
-win_lose_array = [['Tie', 'Lose', "Win"],
-                  ['Win', 'Tie', 'Lose'],
-                  ['Lose', 'Win', 'Tie']]
+win_lose_array = [['Tie', 'Win', "Lose"],
+                  ['Lose', 'Tie', 'Win'],
+                  ['Win', 'Lose', 'Tie']]
+
+number_to_text = ['Rock', 'Paper', 'Scissors']
 
 # rock_button = Button(window, text='rock', font=('Arial', 25))
 # rock_button.place(x=300, y=300)
@@ -29,6 +32,18 @@ computer_score_variable = StringVar(value=computer_score_text+'0')
 you_score_variable = StringVar(value=you_score_text+'0')
 you_choice_label_variable = StringVar(value='You Chose: ')
 
+win_lose_label = Label(window)
+def make_win_lose_label(winner):
+    global win_lose_label
+    if winner == "Win":
+        win_lose_label.config(text='You won!!!', foreground='green', font=('Arial', 25))
+    if winner == "Lose":
+        win_lose_label.config(text='You Lost!!!', foreground='red', font=('Arial', 25))
+    if winner == "Tie":
+        win_lose_label.config(text='Tie!!!', font=('Arial', 25), foreground='black')
+        
+    win_lose_label.place(x=400, y=200)
+        
 
 
 
@@ -36,25 +51,23 @@ def person_choice():
     computer_result = randint(0,2)
     computer_chose_variable.set(computer_chose_variable.get()+str(computer_result))
     person_result = you_choice_variable.get()
-    you_choice_variable.set(you_choice_variable.get())
+    you_choice_label_variable.set(you_choice_text + ' ' + number_to_text[int(person_result)])
+    computer_chose_variable.set(computer_choice_text + ' ' + number_to_text[int(computer_result)])
     winner = win_lose_array[computer_result][int(person_result)]
+    make_win_lose_label(winner)
     if winner == 'Tie':
-        print('tie')
+        pass
     elif winner == 'Lose':
-        print('lose')
         prev_text = computer_score_variable.get()
         prev_text_list = prev_text.rsplit(' ', 1)
-        print(prev_text_list)
         prev_text_text = prev_text_list[0]
         prev_text_value = int(prev_text_list[1])
         prev_text_value += 1
         computer_score_variable.set(prev_text_text+' '+str(prev_text_value))
         
     elif winner == 'Win':
-        print('win')
         prev_text = you_score_variable.get()
         prev_text_list = prev_text.rsplit(' ', 1)
-        print(prev_text_list)
         prev_text_text = prev_text_list[0]
         prev_text_value = int(prev_text_list[1])
         prev_text_value += 1
