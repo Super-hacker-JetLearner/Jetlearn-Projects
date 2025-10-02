@@ -30,10 +30,13 @@ ball = canvas.create_oval(500-ball_radius/2, 400-ball_radius/2, 500+ball_radius/
 
 ball_velocity = [0, 0]
 
-ball_speed = 20
+ball_speed = 5
 direction = random.uniform(0, math.pi*2)
+
 ball_velocity[0] = math.cos(direction)*ball_speed
 ball_velocity[1] = math.sin(direction)*ball_speed
+
+ball_pos = [500, 400]
 
 
 paddle_size = [20, 200]
@@ -55,6 +58,7 @@ speed = 20 # per frame_rate
 
 
 def on_key_down(event:Event):
+    print(event.keysym)
     global paddle1_velocity, paddle2_velocity
     if event.keysym == 'w':
         paddle1_velocity = -1
@@ -68,6 +72,7 @@ def on_key_down(event:Event):
         
         
 def on_key_up(event:Event):
+    print(event.keysym)
     global paddle1_velocity, paddle2_velocity
     if event.keysym == 'w' and paddle1_velocity == -1:
         paddle1_velocity = 0
@@ -112,12 +117,76 @@ canvas.bind_all('<KeyRelease-Down>', on_key_up)
 canvas.bind_all('<KeyRelease-Up>', on_key_up)
 
 def move_ball():
-    canvas.moveto(ball, ball_velocity[0], ball_velocity[1])
-    coordinates = canvas.coords(ball)
-    if coordinates[1] < 0:
+    ball_pos[0] += ball_velocity[0]
+    ball_pos[1] += ball_velocity[1]
+    if ball_pos[1] < 0:
+        ball_pos[1] = 0
         ball_velocity[1] *= -1
+    if ball_pos[1] + ball_radius > HEIGHT:
+        ball_pos[1] = HEIGHT-ball_radius
+        ball_velocity[1] *= -1
+    if ball_pos[0] < 0:
+        score[1] += 1
+        canvas.itemconfig(score_text, text=f'{score[0]} : {score[1]}')
+        reset_all()
+        return True
+    if ball_pos[0] > WIDTH:
+        score[0] += 1
+        canvas.itemconfig(score_text, text=f'{score[0]} : {score[1]}')
+        reset_all()
+        return True
+    
+    
+    if ball_pos[0] < paddle_pos[0] + paddle_size[0]:
+        print('x')
+        if ball_pos[1] > paddle1_y and ball_pos[1]+ball_radius < paddle1_y+paddle_size[1]:
+            print('y')
+            ball_pos[0] = paddle_pos[0]+paddle_size[0]
+            ball_velocity[0] *= -1
+            
+    if ball_pos[0]+ball_radius > WIDTH-(paddle_pos[0]+paddle_size[0]):
+        print('x')
+        if ball_pos[1] > paddle2_y and ball_pos[1]+ball_radius < paddle2_y+paddle_size[1]:
+            print('y')
+            ball_pos[0] = WIDTH-(paddle_pos[0]+ball_radius+paddle_size[0])
+            ball_velocity[0] *= -1
+            
+    
+    canvas.moveto(ball, ball_pos[0], ball_pos[1])
     
 
+def reset_all():
+    global paddle1_y, paddle2_y, ball_velocity, ball_velocity, ball_pos
+    paddle1_y = paddle_pos[1]
+    paddle2_y = paddle_pos[1]
+    
+    direction = random.uniform(0, math.pi*2)
+    ball_velocity[0] = math.cos(direction)*ball_speed
+    ball_velocity[1] = math.sin(direction)*ball_speed
+    ball_pos = [500, 400]
+    canvas.after(2000, do_all)
+
+def check_winner():
+    if score[0] >= 1:
+        print('player 1 won!')
+        winner_text = canvas.create_text(500, 400, text='Player 1 won!', fill='green', font=('Arial', 100, 'bold'))
+        return True
+    if score[1] >= 1:
+        print('player 2 won!')
+        winner_text = canvas.create_text(500, 400, text='Player 2 won!', fill='red', font=('Arial', 100, 'bold'))
+        return True
+
+
+
+def do_all():
+    move_paddles()
+    if check_winner():
+        return
+    if move_ball():
+        return
+    canvas.after(20, do_all)
+
+reset_all()
 
 
 window.mainloop()
