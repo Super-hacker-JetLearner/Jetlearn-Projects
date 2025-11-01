@@ -50,17 +50,20 @@ print('cascade')
 webcam = cv2.VideoCapture(0)
 print('webcam')
 
+
+
+
+
 while True:
     is_frame, frame = webcam.read()
     if not is_frame:
         print('no frame')
-    
-
-    
+        
+        
     
     grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-    faces = cascade_classifier.detectMultiScale(grayscale, 1.2, 5)
+    faces = cascade_classifier.detectMultiScale(grayscale, 1.5, 7)
     for x, y, width, height in faces:
         frame = cv2.rectangle(frame, (x, y), (x+width, y+height), (255, 0, 0), 3)
         cropped_image = grayscale[y:y+height, x:x+width]
@@ -82,12 +85,11 @@ while True:
         
         
     cv2.imshow('video', frame)
-    # print('imshow')
-
-
-
 
 
 
 
 cv2.destroyAllWindows()
+
+
+"homework, change images in folders, make program to use haarcascade to draw rectangles around images, test and improve this"

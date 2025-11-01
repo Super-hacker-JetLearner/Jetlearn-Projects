@@ -20,6 +20,9 @@ if not os.path.isdir(path):
 cascade_classifier = cv2.CascadeClassifier(haarcascade)
 webcam = cv2.VideoCapture(0)
 
+
+resized_size = (300, 300)
+
 count = 1
 while count < 50:
     is_img, img = webcam.read()
@@ -33,6 +36,8 @@ while count < 50:
         
         count += 1
         cropped_image = img[y:y+height, x:x+width]
+        
+        cropped_image = cv2.resize(cropped_image, resized_size)
 
         cv2.imwrite('% s/% s.png'%(path, count), cropped_image)
         
