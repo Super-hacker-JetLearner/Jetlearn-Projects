@@ -70,3 +70,24 @@ def insertion_sort(the_list:list):
 
 result = insertion_sort([2, 1])
 print(result)
+
+
+
+def merge_sort(the_list:list):
+    range = len(the_list)
+    half = range//2
+    bottom_half = the_list[:half]
+    top_half = the_list[half:]
+    sorted_bottom = merge_sort(bottom_half)
+    sorted_top = merge_sort(top_half)
+    full_list = []
+    bottom_index = 0
+    top_index = 0
+    while True:
+        bottom_item = sorted_bottom[bottom_index]
+        top_item = sorted_top[top_index]
+        if bottom_item < top_item:
+            full_list.append(bottom_item)
+            
+            
+    
