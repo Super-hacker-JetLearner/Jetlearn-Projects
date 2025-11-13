@@ -1,31 +1,39 @@
-import cv2
-import os
-import numpy as np
+import random
 
 
-folder_path = '/Users/s932172@aics.espritscholen.nl/Desktop/game development/cv development'
+def binary_search_recursion(the_list:list, find):
+        the_range = len(the_list)
+        half = the_range//2
+        if the_range == 0:
+            return False
+        if the_range == 1:
+            if the_list[0] == find:
+                return 0
+            else:
+                return False
 
-os.chdir(folder_path)
-
-landscape = cv2.imread('landscape.webp')
-
-# cv2.imshow('landscape', landscape)
-
-
-# start_point = (100, 200)
-# end_point = (500, 400)
-color = [0, 255, 255]
-thickness = 10
-
-# line_image = cv2.line(landscape, start_point, end_point, color, thickness)
-line_image = cv2.line(landscape, (0, 50), (150, 100), color, thickness)
-line_image = cv2.line(landscape, (0, 50), (200, 50), color, thickness)
-line_image = cv2.line(landscape, (50, 0), (150, 100), color, thickness)
-line_image = cv2.line(landscape, (50, 0), (0, 100), color, thickness)
-line_image = cv2.line(landscape, (0, 100), (200, 50), color, thickness)
-
-cv2.imshow('line image', line_image)
+        item = the_list[half]
+        if find == item:
+            return half
+        elif find > item:
+            result = binary_search_recursion(the_list[half:], find)
+            return half + result
+        elif find < item:
+            result = binary_search_recursion(the_list[:half], find)
+            return result
 
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+
+
+the_list = []
+for i in range(100):
+    the_list.append(random.randint(0, 10))
+
+the_list.sort()
+
+
+result = binary_search_recursion(the_list, 9)
+print(result)
+
+print(the_list[result])
+print(the_list)
