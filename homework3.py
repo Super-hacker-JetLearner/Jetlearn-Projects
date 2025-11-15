@@ -104,7 +104,7 @@ def merge_sort(the_list:list):
             break
         
     return full_list
-        
+
     
     
 result = merge_sort(the_list)

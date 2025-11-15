@@ -22,8 +22,8 @@ def bubble_sort(the_list:list):
     if len(the_list) == 1:
         return the_list
     current_list = the_list
-    for i in the_list:
-        current_list[:-1] = one_iteration(current_list)[:-1]
+    for i in range(len(the_list)):
+        current_list[:-i] = one_iteration(current_list)[:-i]
         
     return current_list
 
@@ -34,13 +34,12 @@ for i in range(10):
     the_list.append(random.randint(0, 10))
     
     
-# result = bubble_sort(the_list)
-# print(result)
+result = bubble_sort(the_list)
+print(result)
 
 
 def one_insertion(the_list:list, index):
     while True:
-        print(index)
         if index == 0:
             return the_list
         before_number = the_list[index-1]
@@ -89,5 +88,7 @@ def merge_sort(the_list:list):
         if bottom_item < top_item:
             full_list.append(bottom_item)
             
+            
+            # homework: sort items in descending order with bubble and insertion sort, optional: finish merge sort
             
     
