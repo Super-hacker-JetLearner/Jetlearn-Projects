@@ -1,69 +1,111 @@
-import cv2
-import os
-import numpy as np
-
-
-folder_path = '/Users/s932172@aics.espritscholen.nl/Desktop/game development/cv development'
-
-os.chdir(folder_path)
-
-# image = np.zeros((1000, 1000, 3), dtype=np.uint8)
-# cv2.imshow('black background', image)
-image = cv2.imread('people2.png')
-
-# radius = 100
-# color = (0, 255, 255)
-
-# image =cv2.circle(image, (300, 300), radius, color, thickness=-1)
-# image =cv2.circle(image, (500, 500), radius, (255, 0, 0), thickness=-1)
-# image =cv2.circle(image, (650, 650), radius, (0, 255, 0), thickness=-1)
-# image =cv2.circle(image, (150, 150), radius, (255, 255, 255), thickness=-1)
-# image =cv2.circle(image, (800, 800), radius, (255, 255, 255), thickness=-1)
-
-# circle_image =cv2.circle(image, (300, 300), radius, color, thickness=-1)
-
-
-image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-image = cv2.GaussianBlur(image, (9, 9), 0)
-
-cv2.imshow('circle image', image)
+# list sorting
+import random
 
 
 
-parameters = cv2.SimpleBlobDetector_Params()
-parameters.filterByArea = True
-parameters.minArea = 100
-parameters.maxArea = 100000
-# parameters.filterByCircularity = False
-# parameters.minCircularity = 0.00000000000000000001
-# parameters.filterByConvexity = False
-# parameters.minConvexity = 0.0000000000000000000001
-# parameters.filterByInertia = False
-# parameters.minInertiaRatio = 0.00000000000000000001
-# parameters.filterByColor = True
-# parameters.blobColor = 0
-
-# edges = cv2.Canny(image, 50, 50)
-# cv2.imshow('edges', edges)
-
-# version = cv2.__version__.split('.')
-# print(version)
-# if int(version[0]) < 3:
-#     detector = cv2.SimpleBlobDetector(parameters)
-# else:
-#     detector = cv2.SimpleBlobDetector_create(parameters)
-
-detector = cv2.SimpleBlobDetector_create(parameters)
-
-
-key_points = detector.detect(image)
-blobs = cv2.drawKeypoints(image, key_points, image, (255, 100, 100), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-number = len(key_points)
-print(number)
-cv2.imshow('detected', blobs)
+        
+        
+def one_iteration(the_list:list):
+    current_list = the_list
+    current_index = 0
+    while True:
+        if current_list[current_index] < current_list[current_index+1]:
+            first_item = current_list[current_index]
+            second_item = current_list[current_index+1]
+            current_list[current_index] = second_item
+            current_list[current_index+1] = first_item
+            current_index += 1
+        else:
+            current_index += 1
+            
+        if current_index+1 == len(current_list):
+            return current_list
 
 
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+
+def bubble_sort(the_list:list):
+    if len(the_list) == 1:
+        return the_list
+    current_list = the_list
+    for i in range(len(the_list)):
+        current_list[:-i] = one_iteration(current_list)[:-i]
+        
+    return current_list
+
+
+the_list = []
+for i in range(1000):
+    the_list.append(random.randint(0, 10))
+    
+    
+result = bubble_sort(the_list)
+print(result)
+    
+        
+def one_insertion(the_list:list, index):
+    while True:
+        if index == 0:
+            return the_list
+        before_number = the_list[index-1]
+        this_number = the_list[index]
+        if before_number < this_number:
+            before_item = the_list[index-1]
+            the_list[index-1] = this_number
+            the_list[index] = before_item
+            index -= 1
+            
+        else:
+            return the_list
+            
+        if index == 0:
+            return the_list
+        
+
+
+def insertion_sort(the_list:list):
+    current_list = the_list
+    for i in range(1, len(the_list)):
+        current_list = one_insertion(current_list, i)
+        
+    return current_list
+
+
+result = insertion_sort(the_list)
+print(result)
+
+
+
+def merge_sort(the_list:list):
+    range = len(the_list)
+    if range == 1:
+        return the_list
+    half = range//2
+    bottom_half = the_list[:half]
+    top_half = the_list[half:]
+    sorted_bottom = merge_sort(bottom_half)
+    sorted_top = merge_sort(top_half)
+    full_list = []
+    while True:
+        bottom_item = sorted_bottom[0]
+        top_item = sorted_top[0]
+        if bottom_item < top_item:
+            full_list.append(bottom_item)
+            sorted_bottom.pop(0)
+        else:
+            full_list.append(top_item)
+            sorted_top.pop(0)
+            
+        if sorted_bottom == []:
+            full_list.extend(sorted_top)
+            break
+        if sorted_top == []:
+            full_list.extend(sorted_bottom)
+            break
+        
+    return full_list
+        
+    
+    
+result = merge_sort(the_list)
+print(result)
