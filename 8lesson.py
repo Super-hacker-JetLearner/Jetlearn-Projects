@@ -132,6 +132,27 @@ class graph():
         return visited
     
     
+    def find_BFS(self, find, root=None, queue_max=100):
+        if root is None:
+            root = self.vertices[0]
+            
+        node_queue = queue(queue_max)
+        visited = []
+        node_queue.enqueue((root, 0))
+        
+        while len(node_queue) > 0:
+            first_node, distance = node_queue.dqueue()
+            if first_node == find:
+                return distance
+            if first_node not in visited:
+                visited.append(first_node)
+                
+                for connected_node in self.connections[first_node]:
+                    node_queue.enqueue((connected_node, distance+1))
+                    
+        return None
+    
+    
 
 vertices = [1,2,3,4,5,6,7]
 # connections = {1:[2, 3], 2:[5, 4, 1], 3:[1, 5], 4:[2], 5:[2, 3]}
@@ -143,3 +164,6 @@ this_graph = graph(vertices, edges=edges)
 
 print(this_graph.BFS())
 print(this_graph.DFS())
+
+
+print(this_graph.find_BFS(2))
