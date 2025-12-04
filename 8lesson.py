@@ -153,6 +153,14 @@ class graph():
         return None
     
     
+    def check_edge(self, edge):
+        if edge[0] in self.connections:
+            if edge[1] in self.connections[edge[0]]:
+                return True
+            
+        return False
+    
+    
 
 vertices = [1,2,3,4,5,6,7]
 # connections = {1:[2, 3], 2:[5, 4, 1], 3:[1, 5], 4:[2], 5:[2, 3]}
@@ -167,3 +175,5 @@ print(this_graph.DFS())
 
 
 print(this_graph.find_BFS(2))
+
+print(this_graph.check_edge((6,7)))
