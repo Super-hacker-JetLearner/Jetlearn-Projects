@@ -169,16 +169,46 @@ class graph():
             unique_outputs.add(tuple(sorted(result)))
             
         return unique_outputs
+    
+    
+    
+    def check_loop(self, root=None, queue_max=100):
+        if root is None:
+            root = self.vertices[0]
+            
+        node_queue = queue(queue_max)
+        visited = []
+        parent = None
+        node_queue.enqueue((root, parent))
+        while len(node_queue) > 0:
+            first_node, parent = node_queue.dqueue()
+            if first_node not in visited:
+                visited.append(first_node)
+                
+                for connected_node in self.connections[first_node]:
+                    if connected_node != parent:
+                        node_queue.enqueue((connected_node,first_node))
+            else:
+                return True
+                    
+        return False
 
 
 
 
 
 
-vertices = [1,2,3,4,5,6,7, 100,101,102]
-# connections = {1:[2, 3], 2:[5, 4, 1], 3:[1, 5], 4:[2], 5:[2, 3]}
+# vertices = [1,2,3,4,5,6,7, 100,101,102]
+# # connections = {1:[2, 3], 2:[5, 4, 1], 3:[1, 5], 4:[2], 5:[2, 3]}
 
-edges = [(1,2), (1,3), (1, 4), (4,5), (5,6), (5,7), (100,101), (100,102)]
+# edges = [(1,2), (1,3), (1, 4), (4,5), (5,6), (5,7), (100,101), (100,102)]
+# vertices = [0,1,2,3,4,5,7]
+# edges = [(0,1),(0,2),(0,3),(1,4),(1,6),(2,5),(3,7),(1,6),(6,5)]
+# vertices = [1,2,3]
+# edges = [(1,2),(2,3)]
+vertices = [1,2,3,4,5]
+edges = [(1,2),(1,3),(2,4),(2,5)]
+
 
 this_graph = graph(vertices, edges=edges)
 
@@ -186,11 +216,13 @@ this_graph = graph(vertices, edges=edges)
 print(this_graph.BFS())
 print(this_graph.DFS())
 
+print(this_graph.check_loop())
 
-print(this_graph.find_BFS(2))
 
-print(this_graph.check_edge((6,7)))
+# print(this_graph.find_BFS(2))
+
+# print(this_graph.check_edge((6,7)))
 
 
 "display the connected components in the graph. e.g: edges=[(0,1), (2,3), (2,4)] should return [[0,1], [2,3,4]]"
-print(this_graph.get_connections2())
+# print(this_graph.get_connections2())
