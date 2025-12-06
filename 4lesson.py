@@ -1,9 +1,9 @@
 
 
 class stack():
-    def __init__(self):
+    def __init__(self, max_elements):
         self.list = list()
-        self.max_elements = 10
+        self.max_elements = max_elements
         
     def add(self, item):
         if len(self.list) < self.max_elements:
@@ -29,9 +29,12 @@ class stack():
     def clear(self):
         self.list.clear()
         
+    def __len__(self):
+        return len(self.list)
+        
     
     
-# my_stack = stack()
+# my_stack = stack(10)
 # for i in range(10):
 #     my_stack.add(i)
     
@@ -59,9 +62,9 @@ class stack():
 
 
 class queue():
-    def __init__(self):
+    def __init__(self, max_elements):
         self.list = list()
-        self.max_elements = 10
+        self.max_elements = max_elements
         
     def enqueue(self, item):
         if len(self.list) < self.max_elements:
@@ -76,7 +79,7 @@ class queue():
         else:
             raise Exception('queue is empty. queue has 0 elements.')
         
-    def peak(self):
+    def peek(self):
         if len(self.list) > 0:
             return self.list[0]
         else:
@@ -92,7 +95,11 @@ class queue():
         return self.list
     
     
-# my_queue = queue()
+    def __len__(self):
+        return len(self.list)
+    
+    
+# my_queue = queue(10)
 
 # for i in range(10):
 #     my_queue.enqueue(i)
@@ -117,62 +124,64 @@ class queue():
 
 
 class fake_queue():
-    def __init__(self):
+    def __init__(self, max_elements):
         self.stack2 = stack()
-        self.max_elements = 10
+        self.max_elements = max_elements
         
     def enqueue(self, item):
         if len(self.stack2.list) < self.max_elements:
-            this_stack = stack
-            
-            self.stack2.clear()
-            while True:
-                try:
-                    self.stack2.add(self.stack1.take())
-                except:
-                    break
+            self.stack2.add(item)
         else:
             raise Exception(f'queue overflow. queue maximum height exceeded ({self.max_elements})')
         
-            
     def dqueue(self):
-        if len(self.stack2.list) > 0:
-            return self.stack2.take()
-        else:
-            raise Exception('queue is empty. queue has 0 elements.')
-        
-    def peak(self):
-        if len(self.stack2.list) > 0:
+        reversed_stack = stack()
+        for i in range(len(self.stack2)):
+            reversed_stack.add(self.stack2.take())
+        item = reversed_stack.take()
+        for i in range(len(reversed_stack)):
+            self.stack2.add(reversed_stack.take())
+        return item
+    
+    
+    def get_rear(self):
+        if len(self.stack2) > 0:
             return self.stack2.top()
         else:
             raise Exception('queue is empty. queue has 0 elements.')
         
-    def get_rear(self):
-        if len(self.stack2.list) > 0:
-            self.stack1.clear()
-            while True:
-                try:
-                    self.stack1.add(self.stack2.top())
-                except:
-                    break
-            return self.stack1.top()
-        else:
-            raise Exception('queue is empty. queue has 0 elements.')
+    def peek(self):
+        reversed_stack = stack()
+        for i in range(len(self.stack2)):
+            reversed_stack.add(self.stack2.take())
+        item = reversed_stack.top()
+        for i in range(len(reversed_stack)):
+            self.stack2.add(reversed_stack.take())
+        return item
         
-    def show_full(self):
-        self.stack1.clear()
-        while True:
-            try:
-                self.stack1.add(self.stack2.top())
-            except:
-                break
+        
+    def __len__(self):
+        return len(self.stack2.list)
             
-        return self.stack1.list
-    
-    
+                
+    def show_full(self):
+        return self.stack2.list
 
-fake_queue1 = fake_queue()
+
+"homework: bracket matching, optionally fakequeue, just store everything in one stack, and use other stack temporarily for adding/taking"
+
+
+fake_queue1 = fake_queue(10)
+
 for i in range(10):
     fake_queue1.enqueue(i)
     
 print(fake_queue1.dqueue())
+print(fake_queue1.dqueue())
+
+print(fake_queue1.peek())
+print(fake_queue1.get_rear())
+
+
+    
+print(fake_queue1.show_full())

@@ -177,3 +177,6 @@ print(this_graph.DFS())
 print(this_graph.find_BFS(2))
 
 print(this_graph.check_edge((6,7)))
+
+
+"display the connected components in the graph. e.g: edges=[(0,1), (2,3), (2,4)] should return [[0,1], [2,3,4]]"
