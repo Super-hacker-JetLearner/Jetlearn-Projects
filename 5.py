@@ -9,6 +9,8 @@ os.chdir('/Users/s932172@aics.espritscholen.nl/Desktop/game development/data sci
 
 data = pd.read_csv('Data.csv')
 
+import sklearn
+print(sklearn.__version__)
 
 # input and output
 
@@ -29,6 +31,38 @@ print(input)
 
 #categorical to numerical input
 first_column = ColumnTransformer(transformers=[('encoder',OneHotEncoder(),[0])], remainder='passthrough')
-input = np.array(first_column.fit_transform(input))
+input = first_column.fit_transform(input)
+
+if not isinstance(input, np.ndarray):
+    input = input.toarray()
+    print('not')
+
+# input = np.around(input,-1)
 
 print(input)
+
+
+
+from sklearn.preprocessing import LabelEncoder
+
+encoder = LabelEncoder()
+output = encoder.fit_transform(output)
+print(output)
+
+
+
+
+
+from sklearn.model_selection import train_test_split
+
+train_x,test_x,train_y,test_y = train_test_split(input,output,test_size=0.2,random_state=1)
+print(train_x,test_x,train_y,test_y)
+
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+train_x[:,3:5] = scaler.fit_transform(train_x[:,3:5])
+test_x[:,3:5] = scaler.fit_transform(test_x[:,3:5])
+
+
+
