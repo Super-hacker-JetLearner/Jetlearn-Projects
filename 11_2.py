@@ -21,36 +21,4 @@ for dot in scatter.data:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 subplots.show()
