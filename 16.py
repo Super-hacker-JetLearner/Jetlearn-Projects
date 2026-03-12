@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 import matplotlib.pyplot as plt
 
+
 os.chdir('/Users/s932172@aics.espritscholen.nl/Desktop/game development/data science')
 
 uber = pd.read_csv('Uber.csv')
