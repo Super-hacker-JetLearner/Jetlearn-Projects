@@ -15,15 +15,15 @@ import seaborn as sns
 
 os.chdir('/Users/s932172@aics.espritscholen.nl/Desktop/game development/machine_learning')
 
-data = pd.read_csv('titanicai.csv')
+data = pd.read_csv('car_evaluation.csv')
 print(data.head())
 
-data = data.drop(['Embarked','Ticket','Parch','Name','PassengerId'],axis=1)
 
 encoder = LabelEncoder()
 
-data['Sex'] = encoder.fit_transform(data['Sex'])
-data['Cabin'] = encoder.fit_transform(data['Cabin'])
+for column in data.columns:
+    data[column] = encoder.fit_transform(data[column])
+
 
 print(data)
 
@@ -50,5 +50,5 @@ model = model.fit(X_train,Y_train)
 prediction = model.predict(X_test)
 
 matrix = confusion_matrix(Y_test,prediction)
-sns.heatmap(matrix,xticklabels=['pred died','pred survived'],yticklabels=['true died','true survived'],annot=True,fmt="d")
+sns.heatmap(matrix)
 plt.show()
