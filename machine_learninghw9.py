@@ -24,3 +24,6 @@ print(data)
 data = data.sort_values('count',ascending=False)
 
 print(data[[1,'count']].head(10))
+
+
+# simple, content, colaborative
