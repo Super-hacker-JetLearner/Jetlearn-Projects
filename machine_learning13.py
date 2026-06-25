@@ -43,10 +43,10 @@ for sentence in test['text']:
             lemmatized_word = word_lemmatizer.lemmatize(word)
             sentence_list.append(lemmatized_word)
             
-    lemmatized_test_text.append(" ".join(lemmatized_word))
+    lemmatized_test_text.append(" ".join(sentence_list))
     
     
-print(lemmatized_train_text[:50])
+# print(lemmatized_train_text[:50])
     
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -57,14 +57,22 @@ cv_test_text = cv.transform(lemmatized_test_text)
 
 from sklearn.ensemble import RandomForestClassifier
 
+# print(cv_train_text)
 
-# for i in range(10,300,10):
+# for i in range(200,300,10):
 
-model = RandomForestClassifier(n_estimators=150,random_state=50)
-
+model = RandomForestClassifier(n_estimators=100)
 
 model = model.fit(cv_train_text,train['label'])
+# print(train['label'])
 
+# predictions = model.predict(cv_test_text)
+text = 'i laughed a lot because i was very cheerful because i went on amazing holidays'
+cv_test_text = cv.transform([text])
 predictions = model.predict(cv_test_text)
+# print('here')
+# print(predictions)
+# print(test['label'])
 # print(i)
-print(classification_report(test['label'],predictions))
+# print(classification_report(test['label'],predictions))
+print(f'the emotion is {predictions}')

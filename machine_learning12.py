@@ -48,7 +48,7 @@ for sentence in test['text']:
             lemmatized_word = word_lemmatizer.lemmatize(word)
             sentence_list.append(lemmatized_word)
             
-    lemmatized_test_text.append(" ".join(lemmatized_word))
+    lemmatized_test_text.append(" ".join(sentence_list))
     
     
 
@@ -70,3 +70,4 @@ predictions = model.predict(cv_test_text)
 
 print(classification_report(test['labels'],predictions))
 
+ 
