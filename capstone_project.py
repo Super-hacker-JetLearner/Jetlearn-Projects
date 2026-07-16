@@ -1,40 +1,32 @@
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder,LabelEncoder,StandardScaler
-from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LinearRegression
 from sklearn.impute import SimpleImputer
-from sklearn.decomposition import PCA
-from sklearn.ensemble 
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error
 
 
 data = pd.read_csv('/Users/s932172@aics.espritscholen.nl/Desktop/game development/machine_learning/Car_sales.csv')
 
-data = data.drop(axis=1,labels='Latest_Launch')
+data = data.drop(columns=['Latest_Launch'])
 
-encoder = LabelEncoder()
 
-data['Manufacturer'] = encoder.fit_transform(data['Manufacturer'])
-data['Model'] = encoder.fit_transform(data['Model'])
-data['Vehicle_type'] = encoder.fit_transform(data['Vehicle_type'])
+data['Manufacturer'] = LabelEncoder().fit_transform(data['Manufacturer'])
+data['Model'] = LabelEncoder().fit_transform(data['Model'])
+data['Vehicle_type'] = LabelEncoder().fit_transform(data['Vehicle_type'])
 
-imputer = SimpleImputer()
+imputer = SimpleImputer(strategy='mean')
+data = pd.DataFrame(imputer.fit_transform(data), columns=data.columns)
 
-# for column in data.columns:
-#     data[column] = imputer.fit_transform([data[column]])
-columns = data.columns
 
-data = imputer.fit_transform(data)
-data = pd.DataFrame(columns=columns,data=data)
-
-print(data)
-
-X = data.drop('Price_in_thousands')
+X = data.drop(columns=['Price_in_thousands'])
 Y = data['Price_in_thousands']
 
-x_scaler = StandardScaler()
-X = x_scaler.fit_transform(X)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=42)
 
-preprocessor = PCA(8)
-X = preprocessor.fit_transform(X,Y)
+model = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
 
-model = 
+
+print('error', mean_absolute_error(y_test, y_pred))
