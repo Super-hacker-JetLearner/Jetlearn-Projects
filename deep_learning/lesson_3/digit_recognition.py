@@ -14,7 +14,7 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 y_train = to_categorical(y_train, 10)
 y_test = to_categorical(y_test, 10)
 
-initial_learning_rate = 0.01
+initial_learning_rate = 0.4
 batch_size = 64
 epochs = 20
 
