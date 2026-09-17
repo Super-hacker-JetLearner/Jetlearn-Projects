@@ -17,7 +17,7 @@ y_test_binary = to_categorical(y_test_binary, 2)
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
 model = models.Sequential([
-    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32,32,3)),
+    layers.Conv2D(64, (3, 3), activation='relu', input_shape=(32,32,3)),
     layers.MaxPooling2D((2,2)),
     layers.Conv2D(64, (3,3), activation='relu'),
     layers.MaxPooling2D((2, 2)),
@@ -56,8 +56,24 @@ for i in [0,10,25,50,100]:
 
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
+
+
 predicted_classes = np.argmax(predictions, axis=1)
 actual_classes = np.argmax(y_test_binary, axis=1)
+
+def is_wrong(index):
+    if np.argmax(y_test_binary[index]) != np.argmax(predictions[index]):
+        return True
+    
+wrongs = 0
+for i in range(len(predictions)):
+    if is_wrong(i):
+        wrongs += 1
+        display_prediction(i)
+    if wrongs == 5:
+        break
+
+
 
 cm = confusion_matrix(actual_classes, predicted_classes)
 ConfusionMatrixDisplay(cm, display_labels=["Animal", "Vehicle"]).plot()
