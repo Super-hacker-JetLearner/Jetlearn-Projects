@@ -6,7 +6,7 @@ print("Path to dataset files:", path)
 
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications import VGG16
+from tensorflow.keras.applications import VGG16, ResNet50
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Flatten, Dropout
 from tensorflow.keras.optimizers import Adam
@@ -46,7 +46,7 @@ val_generator = val_datagen.flow_from_directory(
 )
 
 
-base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 for layer in base_model.layers:
     layer.trainable = False
@@ -67,7 +67,7 @@ history = model.fit(train_generator, epochs=1, validation_data=val_generator)
 loss, accuracy = model.evaluate(val_generator)
 print(f'Validation accuracy: {accuracy*100:.2f}%')
 
-img_path = path + 'dogvscat_small/test/dogs/1500.jpg'
+img_path = path + '/dogvscat_small/validation/dogs/1499.jpg'
 img = image.load_img(img_path, target_size=(224,224))
 img_array = image.img_to_array(img)
 img_array = np.expand_dims(img_array, axis=0)
