@@ -2,7 +2,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 
-data = yf.download("AAPL",start="2015-01-01",end="2023-01-01")
+data = yf.download("AMZN",start="2015-01-01",end="2023-01-01")
 
 data.head()
 
@@ -13,7 +13,7 @@ scaled_data = scaler.fit_transform(data["Close"].values.reshape(-1,1))
 
 
 
-sequence_length = 60
+sequence_length = 90
 
 X,y=[],[]
 
