@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 x_train = x_train.astype('float32') / 255.0
 x_test = x_test.astype('float32') / 255.0
+print(x_train.shape)
 
 x_train = x_train.reshape((-1,28,28))
 x_test = x_test.reshape((-1,28,28))
